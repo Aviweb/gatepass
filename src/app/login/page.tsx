@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
   };
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       {message !== "" ? (
         <div className="alert error disp">
           <input type="checkbox" id="alert1" />
