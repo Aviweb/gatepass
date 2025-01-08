@@ -1,17 +1,20 @@
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../../../lib/prisma";
+import { log } from "console";
 
 export async function POST(req) {
-  const { email, password } = await req.json();
+  const { roll_no, password } = await req.json();
 
-  if (!email || !password) {
+  console.log("hello from the console", process.env.JWT_SECRET);
+
+  if (!roll_no || !password) {
     return new Response(JSON.stringify({ error: "Missing fields" }), {
       status: 400,
     });
   }
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.users.findUnique({ where: { roll_no } });
 
   if (!user) {
     return new Response(JSON.stringify({ error: "User not found" }), {

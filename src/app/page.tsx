@@ -1,6 +1,6 @@
 "use client";
 import Head from "next/head";
-import "./main.css";
+import "../static/main.css";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 
