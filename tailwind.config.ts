@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        darkOrange: "#ffbc00",
+      },
+      padding: {
+        customPadding: "100px", // Custom padding value (5.5 represents 1.375rem)
       },
     },
   },

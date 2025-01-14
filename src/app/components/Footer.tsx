@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,47 +11,47 @@ import {
 import "../../static/main.css";
 
 export const Footer = () => {
+  const footerData = [
+    {
+      title: faTwitter,
+      link: "https://twitter.com/NITJofficial",
+    },
+    {
+      title: faFacebook,
+      link: "https://www.facebook.com/NITJofficial/",
+    },
+    {
+      title: faInstagram,
+      link: "https://www.instagram.com/nitjofficial/",
+    },
+    {
+      title: faLinkedin,
+      link: "https://www.linkedin.com/school/dr-b-r-ambedkar-national-institute-of-technology-jalandhar-official/",
+    },
+    {
+      title: faGithub,
+      link: "https://github.com/GDSC-NITJ/",
+    },
+  ];
+
   return (
-    <div id="main-footer">
-      <div className="footer-content">
-        <p>Copyright &copy; 2023, All Rights Reserved</p>
-        <div className="social ">
+    <div className=" flex items-center justify-between px-customPadding mt-[38px] bg-[#262626]">
+      <p>Copyright &copy; 2023, All Rights Reserved</p>
+      <div className="space-x-4 py-1">
+        {footerData?.map((item: any, index) => (
           <a
-            href="https://twitter.com/NITJofficial"
+            key={index}
+            href={item?.link}
+            className=""
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon
+              className="h-6 w-6 p-1.5 hover:bg-black hover:text-gray-200 bg-[#262626] border-2 text-white rounded-full"
+              icon={item?.title}
+            />
           </a>
-          <a
-            href="https://www.facebook.com/NITJofficial/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FontAwesomeIcon icon={faFacebook} />
-          </a>
-          <a
-            href="https://www.instagram.com/nitjofficial/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FontAwesomeIcon icon={faInstagram} />
-          </a>
-          <a
-            href="https://www.linkedin.com/school/dr-b-r-ambedkar-national-institute-of-technology-jalandhar-official/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FontAwesomeIcon icon={faLinkedin} />
-          </a>
-          <a
-            href="https://github.com/GDSC-NITJ/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FontAwesomeIcon icon={faGithub} />
-          </a>
-        </div>
+        ))}
       </div>
     </div>
   );

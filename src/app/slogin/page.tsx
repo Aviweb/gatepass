@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import "../../static/main.css";
 import "../../static/alert.css";
 import "../../static/new.css";
-import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import LoginForm from "../components/LoginForm";
 import { RegisterForm } from "../components/RegisterForm";
 import { Message } from "./Message";
+import HeaderShort from "../components/HeaderShort";
 
 const LoginPage: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -15,6 +15,7 @@ const LoginPage: React.FC = () => {
   return (
     <div>
       {/* <Header /> */}
+      <HeaderShort />
       <Message message={message} />
 
       <div className="maindiv " style={{ height: "36.4rem" }}>

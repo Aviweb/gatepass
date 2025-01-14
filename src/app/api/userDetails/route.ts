@@ -55,22 +55,21 @@ export async function GET(request: Request) {
   try {
     // Parse the URL for query parameters
     const { searchParams } = new URL(request.url);
-    const uuid = searchParams.get("uuid");
-    // const
+    const uuid = searchParams.get("uuid"); // Get the UUID from the query params
 
-    let gatePasses;
+    console.log("uuis", uuid);
+
+    let users;
 
     if (uuid) {
-      console.log("inside");
-
       // Fetch records matching the UUID
-      gatePasses = await prisma.gatePass.findMany({
+      users = await prisma.users.findMany({
         where: {
-          id: uuid,
+          uuid: uuid,
         },
       });
 
-      if (gatePasses.length === 0) {
+      if (users.length === 0) {
         return new Response(
           JSON.stringify({
             message: "No records found for the provided Roll No.",
@@ -78,30 +77,11 @@ export async function GET(request: Request) {
           { status: 404, headers: { "Content-Type": "application/json" } }
         );
       }
-      console.log("hello", gatePasses);
 
       return new Response(
         JSON.stringify({
           message: "Data fetched successfully!",
-          data: gatePasses,
-        }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
-      );
-    } else {
-      // Fetch all records if no UUID is provided
-      gatePasses = await prisma.gatePass.findMany();
-
-      if (gatePasses.length === 0) {
-        return new Response(JSON.stringify({ message: "No records found." }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-
-      return new Response(
-        JSON.stringify({
-          message: "All data fetched successfully!",
-          data: gatePasses,
+          data: users,
         }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );

@@ -41,6 +41,7 @@
    9. To sync your prisma client with the database use yarn prisma introspect
 
 7. Git config to push data from your local repo to a different Git account
+
    1. Go To User Settings/ Developer Settings/ PAT /token classic
    2. Select the repo, workflow, write packages
    3. Generate a Personal Access Token
@@ -48,3 +49,9 @@
       git remote set-url origin https://<username>:<token>@github.com/<username>/<repository>.git
    5. Add the main branch if necessary and clear the git cache problem
    6. Then perform ggpush
+
+8. Difference between next/router and next/navigation
+9. Setting the cookie in HTTP and other modes so that it is accessible by the javascript
+10. Setting and configuring the Middleware function
+11. Creating a object to map the different routes to protect for the differnt roles.
+12. Instead of using the matcher property creating dynamic checking logics to protect the routes separately for differnt users.

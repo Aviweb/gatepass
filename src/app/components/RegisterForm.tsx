@@ -5,7 +5,7 @@ interface props {
   message: string;
   setMessage: React.Dispatch<SetStateAction<string>>;
 }
-export const RegisterForm = ({ message, setMessage }: props) => {
+export const RegisterForm = ({ setMessage }: props) => {
   const [name, setName] = useState("");
   const [roll, setRoll] = useState("");
   const [pass, setPass] = useState("");

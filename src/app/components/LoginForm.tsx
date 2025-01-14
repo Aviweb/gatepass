@@ -1,6 +1,9 @@
+"use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-export const LoginForm = () => {
+const LoginForm: React.FC = () => {
+  const router = useRouter();
   const [roll, setRoll] = useState("");
   const [pass, setPass] = useState("");
 
@@ -20,7 +23,13 @@ export const LoginForm = () => {
     if (data.error) {
       alert(data.error);
     } else {
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("token", data.token);
+      // document.cookie = `token=${data.token}; path=/; HttpOnly; Secure`;
+      console.log("uuid in login", data);
+
+      document.cookie = `token=${data.token}; path=/; Secure`;
+      document.cookie = `uuid=${data.uuid}; path=/; Secure`;
+      router.push("student/home");
     }
   };
 
