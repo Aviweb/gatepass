@@ -29,6 +29,18 @@ export const Header = ({ role, userName }: props) => {
 
   if (role === "student") headerLinksData = studentRoleData;
   else headerLinksData = mainPageData;
+
+  const clearCookies = () => {
+    // Get all cookies
+    const cookies = document.cookie.split(";");
+
+    // Loop through and remove each cookie
+    cookies.forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    });
+  };
   return (
     <div
       className="bg-cover bg-right bg-fixed bg-no-repeat h-screen text-white"
@@ -55,6 +67,9 @@ export const Header = ({ role, userName }: props) => {
               <li key={index}>
                 <a
                   href={item?.link}
+                  onClick={() => {
+                    if (item?.title === "Logout") clearCookies(); // cookies.clear();
+                  }}
                   className={`${index === 0 ? "current" : ""}`}
                 >
                   {item?.title}
@@ -67,15 +82,20 @@ export const Header = ({ role, userName }: props) => {
           {userName ? (
             <>
               {" "}
-              <h1>Welcome {userName}</h1>
+              <p className="text-6xl font-extrabold text-center leading-[77px]">
+                Welcome Back {userName}
+              </p>
               <p className="lead">
-                A completely digital process to generate your gate pass and get
-                approved by hostel admin. Step towards paperless campus.{" "}
+                It's been a while since you've been studying, how about we try
+                to get you a gatepass. <br />
+                LET'S GO!!!
               </p>
             </>
           ) : (
             <>
-              <h1>Welcome to NITJ Gate Pass Management System</h1>
+              <p className="text-6xl font-extrabold text-center leading-[77px]">
+                Welcome to NITJ Gate Pass Management System
+              </p>
               <p className="lead">
                 A completely digital process to generate your gate pass and get
                 approved by hostel admin. Step towards paperless campus.{" "}

@@ -28,4 +28,5 @@ model GatePass {
   status    String    @db.VarChar(255)
   outTime   DateTime? @db.DateTime(0)
   inTime    DateTime? @db.DateTime(0)
+  user_uuid String    @db.VarChar(50)
 }

@@ -5,7 +5,8 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 interface StudentDataProps {
-  applied_at: string;
+  createdAt: string;
+  reason?: string;
   status?: string;
   out_time?: string;
   in_time?: string;
@@ -16,15 +17,43 @@ const Page = () => {
   const [studentData, setstudentData] = useState<StudentDataProps[]>([]);
   const columnTitles = [
     "S.no",
+    "Reason",
     "Applied at",
+    "Expected Arrival",
     "Status",
     "Out Time",
     "In Time",
-    "Actions",
+    // "Actions",
   ];
+
+  function formatDateTimeToIST(dateTimeStr: any) {
+    const dateObj = new Date(dateTimeStr);
+
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+    const istDateObj = new Date(dateObj.getTime() + istOffset);
+
+    let hours = istDateObj.getUTCHours();
+    const minutes = istDateObj.getUTCMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12; // Convert 24-hour format to 12-hour format
+
+    const day = istDateObj.getUTCDate();
+    const month = istDateObj.toLocaleString("en-US", {
+      month: "short",
+      timeZone: "UTC",
+    });
+    const year = istDateObj.getUTCFullYear();
+
+    return {
+      date: `${day} ${month} ${year}`,
+      time: `${hours}:${minutes} ${ampm}`,
+    };
+    // return `${hours}:${minutes} ${ampm}, ${day} ${month} ${year}`;
+  }
   useEffect(() => {
     const token = cookies.get("token");
-    console.log("Token:", token);
+    // console.log("Token:", token);
+
     const uuid = "4517f629-c687-4731-9e3c-f273c15098ad";
     const fetchData = async () => {
       try {
@@ -64,18 +93,30 @@ const Page = () => {
                     className="odd:bg-white odd:dark:bg-gray-900 text-white even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
                   >
                     <td className="text-center py-1">{index + 1}</td>
-                    <td className="text-center py-1">{entry?.applied_at}</td>
-                    <td className="text-center py-1">{entry?.status}</td>
-                    <td className="text-center py-1">{entry?.out_time}</td>
-                    <td className="text-center py-1">{entry?.in_time}</td>
+                    <td className="text-center py-1">{entry?.reason}</td>
                     <td className="text-center py-1">
+                      {formatDateTimeToIST(entry?.createdAt)?.time +
+                        ", " +
+                        formatDateTimeToIST(entry?.createdAt)?.date}
+                    </td>
+                    <td className="text-center py-1">
+                      {formatDateTimeToIST(entry?.createdAt)?.date}
+                    </td>
+                    <td className="text-center py-1">{entry?.status}</td>
+                    <td className="text-center py-1">
+                      {entry?.out_time ? entry?.out_time : "-"}
+                    </td>
+                    <td className="text-center py-1">
+                      {entry?.in_time ? entry?.in_time : "-"}
+                    </td>
+                    {/* <td className="text-center py-1">
                       <a
                         href="#"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
                         Edit
                       </a>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

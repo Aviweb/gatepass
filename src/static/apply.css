@@ -158,7 +158,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-bottom: 1px solid #666;
   color: #ddd;
   font-size: 14px;
-  text-transform: uppercase;
   outline: none;
   transition: border-color 0.2s;
 }
