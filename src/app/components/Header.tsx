@@ -1,25 +1,45 @@
+"use client";
 import React from "react";
+import Image from "next/image";
+import "../../static/main.css";
+interface NavItems {
+  title: string;
+  link: string;
+}
+interface props {
+  role?: string;
+  userName?: string;
+}
+export const Header = ({ role, userName }: props) => {
+  const studentRoleData = [
+    { title: "Home", link: "/student/home" },
+    { title: "Apply", link: "/student/apply" },
+    { title: "Status", link: "/student/status" },
+    { title: "Logout", link: "/" },
+  ];
+  const mainPageData = [
+    { title: "Home", link: "/" },
+    { title: "Student", link: "/slogin" },
+    { title: "Hostel", link: "/hlogin" },
+    { title: "Admin", link: "/alogin" },
+    { title: "Gate", link: "/glogin" },
+  ];
 
-export const Header = () => {
-  const myFunction = () => {
-    sessionStorage.clear();
-    window.location.replace("https://gate-pass-nitj.onrender.com/");
-  };
-  const myFunction2 = () => {
-    sessionStorage.clear();
-    window.location.replace("https://gate-pass-nitj.onrender.com/slogin");
-  };
-  const myFunction3 = () => {
-    sessionStorage.clear();
-    window.location.replace("https://gate-pass-nitj.onrender.com/tlogin");
-  };
-  const myFunction4 = () => {
-    sessionStorage.clear();
-    window.location.replace("https://gate-pass-nitj.onrender.com/hlogin");
-  };
-  const myFunction5 = () => {
-    sessionStorage.clear();
-    window.location.replace("https://gate-pass-nitj.onrender.com/glogin");
+  let headerLinksData;
+
+  if (role === "student") headerLinksData = studentRoleData;
+  else headerLinksData = mainPageData;
+
+  const clearCookies = () => {
+    // Get all cookies
+    const cookies = document.cookie.split(";");
+
+    // Loop through and remove each cookie
+    cookies.forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    });
   };
   return (
     <div
@@ -33,53 +53,55 @@ export const Header = () => {
         <nav id="main-nav">
           <div className="container1">
             <a href="https://www.nitj.ac.in/" target="_blank">
-              <img src="nitjlogo.png" alt="NITJ" height="60px" width="20px" />
+              <Image
+                src="/nitjlogo.png"
+                alt="NITJ"
+                width={60}
+                height={60}
+                className="lg:max-w-[60px]"
+              />
             </a>
           </div>
           <ul>
-            <li>
-              <a href="#" onClick={myFunction} className="current">
-                Home
-              </a>
-            </li>
-
-            <form method="post" action="/slogin">
-              <li>
-                <a href="#" onClick={myFunction2}>
-                  Student
+            {headerLinksData?.map((item: NavItems, index) => (
+              <li key={index}>
+                <a
+                  href={item?.link}
+                  onClick={() => {
+                    if (item?.title === "Logout") clearCookies(); // cookies.clear();
+                  }}
+                  className={`${index === 0 ? "current" : ""}`}
+                >
+                  {item?.title}
                 </a>
               </li>
-            </form>
-            <form method="post" action="/tlogin">
-              <li>
-                <a href="#" onClick={myFunction3}>
-                  Hostel
-                </a>
-              </li>
-            </form>
-            <form method="post" action="/hlogin">
-              <li>
-                <a href="#" onClick={myFunction4}>
-                  Admin
-                </a>
-              </li>
-            </form>
-            <form method="post" action="/glogin">
-              <li>
-                <a href="#" onClick={myFunction5}>
-                  Gate
-                </a>
-              </li>
-            </form>
+            ))}
           </ul>
         </nav>
         <div className="header-content">
-          <h1>Welcome to NITJ Gate Pass Management System</h1>
-
-          <p className="lead">
-            A completely digital process to generate your gate pass and get
-            approved by hostel admin. Step towards paperless campus.{" "}
-          </p>
+          {userName ? (
+            <>
+              {" "}
+              <p className="text-6xl font-extrabold text-center leading-[77px]">
+                Welcome Back {userName}
+              </p>
+              <p className="lead">
+                It's been a while since you've been studying, how about we try
+                to get you a gatepass. <br />
+                LET'S GO!!!
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-6xl font-extrabold text-center leading-[77px]">
+                Welcome to NITJ Gate Pass Management System
+              </p>
+              <p className="lead">
+                A completely digital process to generate your gate pass and get
+                approved by hostel admin. Step towards paperless campus.{" "}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>
