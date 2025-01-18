@@ -87,6 +87,25 @@ export async function GET(request: Request) {
         }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
+    } else {
+      users = await prisma.users.findMany({});
+
+      if (users.length === 0) {
+        return new Response(
+          JSON.stringify({
+            message: "No records found for the provided Roll No.",
+          }),
+          { status: 404, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          message: "Data fetched successfully!",
+          data: users,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
     }
   } catch (error) {
     console.error("Error in API route:", error);

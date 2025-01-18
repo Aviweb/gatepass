@@ -15,10 +15,27 @@ interface props {
 }
 
 export const HeaderShort = ({ role }: props) => {
+  const clearCookies = () => {
+    // Get all cookies
+    const cookies = document.cookie.split(";");
+
+    // Loop through and remove each cookie
+    cookies.forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    });
+  };
   const studentRoleData = [
     { title: "Home", link: "/student/home" },
     { title: "Apply", link: "/student/apply" },
     { title: "Status", link: "/student/status" },
+    { title: "Logout", link: "/" },
+  ];
+  const adminRoleData = [
+    { title: "Gatepass", link: "/admin/status" },
+    { title: "Hostels", link: "/admin/hostelData" },
+    { title: "Student", link: "/admin/student" },
     { title: "Logout", link: "/" },
   ];
   const mainPageData = [
@@ -32,6 +49,7 @@ export const HeaderShort = ({ role }: props) => {
   let headerLinksData;
 
   if (role === "student") headerLinksData = studentRoleData;
+  else if (role === "admin") headerLinksData = adminRoleData;
   else headerLinksData = mainPageData;
   return (
     <div
@@ -60,7 +78,7 @@ export const HeaderShort = ({ role }: props) => {
                 <a
                   href={item?.link}
                   onClick={() => {
-                    if (item?.link === "/") console.log("yesss");
+                    if (item?.title === "Logout") clearCookies();
                   }}
                 >
                   {item?.title}
