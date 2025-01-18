@@ -12,7 +12,7 @@ export async function GET() {
   return new Response(
     JSON.stringify({
       message: "All data fetched successfully!",
-      data: "users",
+      data: process.env.JWT_SECRET,
     }),
     { status: 200, headers: { "Content-Type": "application/json" } }
   );

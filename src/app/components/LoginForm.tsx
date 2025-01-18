@@ -75,27 +75,43 @@ const LoginForm = ({ role, setMessage }: props) => {
         name: name,
         password: pass,
       };
+
       const response = await fetch("/api/auth/alogin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        // Check for HTTP errors (e.g., 400 or 500 status codes)
+        const errorText = await response.text(); // Read the error message or body
+        console.error("Login failed:", errorText);
+        setMessage("Login failed. Please try again.");
+        return;
+      }
+
       const data = await response.json();
 
       if (data.error) {
-        setMessage(data?.error);
+        // If backend sends error in the response body
+        setMessage(data.error || "Unknown error occurred");
       } else {
         console.log("uuid in login", data);
 
-        document.cookie = `token=${data.token}; path=/; Secure`;
-        document.cookie = `uuid=${data.uuid}; path=/; Secure`;
+        // Secure cookie handling, make sure cookies are only sent over HTTPS
+        document.cookie = `token=${data.token}; path=/; Secure; HttpOnly`;
+        document.cookie = `uuid=${data.uuid}; path=/; Secure; HttpOnly`;
+
+        // Redirect to the admin status page
         router.push("/admin/status");
       }
     } catch (err) {
-      console.log("error", err);
+      // Handle any unexpected errors, including network issues
+      console.error("Unexpected error:", err);
+      setMessage("An unexpected error occurred. Please try again.");
     }
   };
+
   const handleGateSubmit = async () => {
     try {
       const formData = {
