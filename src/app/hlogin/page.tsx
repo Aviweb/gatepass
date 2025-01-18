@@ -5,13 +5,11 @@ import "../../static/alert.css";
 import "../../static/new.css";
 import { Footer } from "../components/Footer";
 import LoginForm from "../components/LoginForm";
-import { RegisterForm } from "../components/RegisterForm";
 import { Message } from "../components/Message";
 import HeaderShort from "../components/HeaderShort";
 
 const LoginPage: React.FC = () => {
-  const [message, setMessage] = useState("");
-
+  const [message, setMessage] = useState<string>("");
   return (
     <div>
       <HeaderShort />
@@ -20,8 +18,7 @@ const LoginPage: React.FC = () => {
       <div className="maindiv " style={{ height: "36.4rem" }}>
         <div className="main">
           <input type="checkbox" id="chk" aria-hidden="true" />
-          <LoginForm setMessage={setMessage} />
-          <RegisterForm message={message} setMessage={setMessage} />
+          <LoginForm role="hostelClerk" setMessage={setMessage} />
         </div>
       </div>
       <Footer />

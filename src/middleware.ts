@@ -75,12 +75,14 @@ const rolePermissions: Record<string, string[]> = {
   admin: ["/admin", "/dashboard", "/settings"],
   student: ["/student/home", "/student/apply", "/student/status"],
   gateKeeper: ["/dashboard", "/profile"],
-  hostelClerk: ["/home", "/about"],
+  hostelClerk: ["/hostelClerk"],
 };
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const requestedPath = req.nextUrl.pathname;
+
+  console.log("middleware", req.url);
 
   // Exclude static files and other non-relevant paths from middleware
   if (
@@ -104,7 +106,9 @@ export async function middleware(req: NextRequest) {
   // If no token is present, redirect to login
   if (!token) {
     console.log("No token found. Redirecting to login.");
-    return NextResponse.redirect(new URL("/slogin", req.url));
+    if (requestedPath === "/hostelClerk")
+      return NextResponse.redirect(new URL("/hlogin", req.url));
+    else return NextResponse.redirect(new URL("/slogin", req.url));
   }
 
   try {
@@ -144,5 +148,6 @@ export const config = {
     "/profile/:path*",
     "/home/:path*",
     "/about/:path*",
+    "/hostelClerk/:path*",
   ],
 };

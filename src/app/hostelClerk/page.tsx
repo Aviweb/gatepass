@@ -4,7 +4,7 @@ import { Footer } from "@/app/components/Footer";
 import React from "react";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-interface StudentDataProps {
+interface HostelDataProps {
   createdAt: Date;
   reason?: string;
   status?: string;
@@ -13,7 +13,7 @@ interface StudentDataProps {
 }
 
 const Page = () => {
-  const [studentData, setstudentData] = useState<StudentDataProps[]>([]);
+  const [studentData, setstudentData] = useState<HostelDataProps[]>([]);
   const columnTitles = [
     "S.no",
     "Reason",

@@ -7,11 +7,15 @@ import {
   faInstagram,
   faLinkedin,
   faGithub,
+  IconDefinition,
 } from "@fortawesome/free-brands-svg-icons";
 import "../../static/main.css";
-
+interface SocialMediaIconsData {
+  title: IconDefinition;
+  link?: string;
+}
 export const Footer = () => {
-  const footerData = [
+  const footerData: SocialMediaIconsData[] = [
     {
       title: faTwitter,
       link: "https://twitter.com/NITJofficial",
@@ -38,7 +42,7 @@ export const Footer = () => {
     <div className=" flex items-center justify-between px-customPadding mt-[38px] bg-[#262626]">
       <p>Copyright &copy; 2023, All Rights Reserved</p>
       <div className="space-x-4 py-1">
-        {footerData?.map((item: any, index) => (
+        {footerData?.map((item: SocialMediaIconsData, index) => (
           <a
             key={index}
             href={item?.link}
