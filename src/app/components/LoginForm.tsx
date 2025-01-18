@@ -63,7 +63,61 @@ const LoginForm = ({ role, setMessage }: props) => {
 
         document.cookie = `token=${data.token}; path=/; Secure`;
         document.cookie = `uuid=${data.uuid}; path=/; Secure`;
-        router.push("/hostel");
+        router.push("/hostelClerk");
+      }
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+  const handleAdminSubmit = async () => {
+    try {
+      const formData = {
+        name: name,
+        password: pass,
+      };
+      const response = await fetch("/api/auth/alogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        setMessage(data?.error);
+      } else {
+        console.log("uuid in login", data);
+
+        document.cookie = `token=${data.token}; path=/; Secure`;
+        document.cookie = `uuid=${data.uuid}; path=/; Secure`;
+        router.push("/admin/status");
+      }
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+  const handleGateSubmit = async () => {
+    try {
+      const formData = {
+        name: name,
+        password: pass,
+      };
+      const response = await fetch("/api/auth/glogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        setMessage(data?.error);
+      } else {
+        console.log("uuid in login", data);
+
+        document.cookie = `token=${data.token}; path=/; Secure`;
+        document.cookie = `uuid=${data.uuid}; path=/; Secure`;
+        router.push("/gate");
       }
     } catch (err) {
       console.log("error", err);
@@ -96,6 +150,60 @@ const LoginForm = ({ role, setMessage }: props) => {
             required
           />
           <button onClick={handleHostelSubmit} value="Login">
+            Login
+          </button>
+        </div>
+      ) : role === "admin" ? (
+        <div className="signup">
+          <label className="text-white" htmlFor="chk" aria-hidden="true">
+            Login
+          </label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter Name"
+            id="aname"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            id="apassword"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            required
+          />
+          <button onClick={handleAdminSubmit} value="Login">
+            Login
+          </button>
+        </div>
+      ) : role === "gateKeeper" ? (
+        <div className="signup">
+          <label className="text-white" htmlFor="chk" aria-hidden="true">
+            Login
+          </label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter Name"
+            id="gname"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            id="gpassword"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            required
+          />
+          <button onClick={handleGateSubmit} value="Login">
             Login
           </button>
         </div>

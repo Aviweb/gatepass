@@ -55,3 +55,12 @@
 10. Setting and configuring the Middleware function
 11. Creating a object to map the different routes to protect for the differnt roles.
 12. Instead of using the matcher property creating dynamic checking logics to protect the routes separately for differnt users.
+13. To make changes in the database.
+14. Run the Sql queries in the online server
+15. Sync it with the prisma collection using yarn prisma introspect
+
+<!-- Next Version -->
+
+1. Prefill the data in student application form
+2. Admin table
+3. Request approval for student registrations

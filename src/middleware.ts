@@ -72,9 +72,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const rolePermissions: Record<string, string[]> = {
-  admin: ["/admin", "/dashboard", "/settings"],
+  admin: ["/admin/status", "/admin/hostel", "/admin/student"],
   student: ["/student/home", "/student/apply", "/student/status"],
-  gateKeeper: ["/dashboard", "/profile"],
+  gateKeeper: ["/gate"],
   hostelClerk: ["/hostelClerk"],
 };
 
@@ -108,6 +108,10 @@ export async function middleware(req: NextRequest) {
     console.log("No token found. Redirecting to login.");
     if (requestedPath === "/hostelClerk")
       return NextResponse.redirect(new URL("/hlogin", req.url));
+    else if (requestedPath.startsWith("/admin"))
+      return NextResponse.redirect(new URL("/alogin", req.url));
+    else if (requestedPath.startsWith("/gate"))
+      return NextResponse.redirect(new URL("/glogin", req.url));
     else return NextResponse.redirect(new URL("/slogin", req.url));
   }
 
@@ -143,6 +147,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/admin/:path*",
+    "/gate/:path*",
     "/student/:path*",
     "/dashboard/:path*",
     "/profile/:path*",

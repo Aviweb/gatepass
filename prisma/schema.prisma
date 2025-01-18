@@ -13,6 +13,9 @@ model users {
   roll_no    String    @unique(map: "roll_no") @db.VarChar(50)
   password   String    @db.VarChar(255)
   created_at DateTime? @default(now()) @db.Timestamp(0)
+  phoneNo    String?   @db.VarChar(15)
+  hostel     String?   @db.VarChar(100)
+  branch     String?   @db.VarChar(100)
 }
 
 model GatePass {
