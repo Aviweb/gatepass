@@ -8,7 +8,8 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     // Validate the data
-    const { name, roll, branch, hostel, phoneNo, date, reason } = data;
+    const { name, roll, branch, hostel, phoneNo, date, reason, user_uuid } =
+      data;
     if (!name || !roll || !branch || !hostel || !phoneNo || !date || !reason) {
       return new Response(
         JSON.stringify({ message: "All fields are required." }),
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
         status: "pending",
         inTime: null,
         outTime: null,
+        user_uuid: user_uuid,
       },
     });
 

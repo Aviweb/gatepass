@@ -30,3 +30,12 @@ model GatePass {
   inTime    DateTime? @db.DateTime(0)
   user_uuid String    @db.VarChar(50)
 }
+
+model HostelDetails {
+  uuid        String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  clerkId     String    @unique(map: "unique_clerkId") @db.VarChar(50)
+  designation String?   @db.VarChar(100)
+  hostel      String?   @db.VarChar(100)
+  createdAt   DateTime? @default(now()) @db.Timestamp(0)
+  password    String    @db.VarChar(255)
+}

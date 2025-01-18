@@ -86,9 +86,10 @@ export const Header = ({ role, userName }: props) => {
                 Welcome Back {userName}
               </p>
               <p className="lead">
-                It's been a while since you've been studying, how about we try
-                to get you a gatepass. <br />
-                LET'S GO!!!
+                It&apos;s been a while since you&apos;ve been studying. How
+                about we try to get you a gate pass?
+                <br />
+                <strong>LET&apos;S GO!!!</strong>
               </p>
             </>
           ) : (
