@@ -8,8 +8,9 @@ interface HostelDataProps {
   createdAt: Date;
   reason?: string;
   status?: string;
-  out_time?: string;
-  in_time?: string;
+  outTime: Date;
+  inTime: Date;
+  id: string;
 }
 
 const Page = () => {
@@ -25,29 +26,50 @@ const Page = () => {
     // "Actions",
   ];
 
+  const handleUpdateStatus = async (uuid: string, status: string) => {
+    console.log("data", uuid);
+
+    const formData = {
+      uuid: uuid,
+      status: status,
+      // date: new Date().toISOString(),
+    };
+    try {
+      const response = await fetch("api/submitGatePass", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      await response.json();
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   function formatDateTimeToIST(dateTimeStr: Date) {
     const dateObj = new Date(dateTimeStr);
 
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
-    const istDateObj = new Date(dateObj.getTime() + istOffset);
+    // Convert to IST
+    const istDateObj = new Date(
+      dateObj.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
 
-    let hours = istDateObj.getUTCHours();
-    const minutes = istDateObj.getUTCMinutes().toString().padStart(2, "0");
+    let hours = istDateObj.getHours(); // Directly get hours in IST
+    const minutes = istDateObj.getMinutes().toString().padStart(2, "0");
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12 || 12; // Convert 24-hour format to 12-hour format
 
-    const day = istDateObj.getUTCDate();
+    const day = istDateObj.getDate();
     const month = istDateObj.toLocaleString("en-US", {
       month: "short",
-      timeZone: "UTC",
+      timeZone: "Asia/Kolkata",
     });
-    const year = istDateObj.getUTCFullYear();
+    const year = istDateObj.getFullYear();
 
     return {
       date: `${day} ${month} ${year}`,
       time: `${hours}:${minutes} ${ampm}`,
     };
-    // return `${hours}:${minutes} ${ampm}, ${day} ${month} ${year}`;
   }
   useEffect(() => {
     const cookies = new Cookies();
@@ -61,8 +83,15 @@ const Page = () => {
         const responseData = await response.json();
         if (response) {
           console.log("re", responseData?.data);
+          const filteredData = responseData?.data?.filter(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (item: any) =>
+              item?.status === "approved" ||
+              item?.status === "moved-in" ||
+              item?.status === "moved-out"
+          );
 
-          setstudentData(responseData?.data);
+          setstudentData(filteredData);
         }
       } catch (err) {
         console.log("error ", err);
@@ -73,7 +102,7 @@ const Page = () => {
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <div>
-        <HeaderShort role="student" />
+        <HeaderShort role="hostelClerk" />
         <div className="w-[1340px] mx-auto mt-10">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -87,38 +116,78 @@ const Page = () => {
                 </tr>
               </thead>
               <tbody>
-                {studentData?.map((entry, index) => (
-                  <tr
-                    key={index}
-                    className="odd:bg-white odd:dark:bg-gray-900 text-white even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
-                  >
-                    <td className="text-center py-1">{index + 1}</td>
-                    <td className="text-center py-1">{entry?.reason}</td>
-                    <td className="text-center py-1">
-                      {formatDateTimeToIST(entry?.createdAt)?.time +
-                        ", " +
-                        formatDateTimeToIST(entry?.createdAt)?.date}
-                    </td>
-                    <td className="text-center py-1">
-                      {formatDateTimeToIST(entry?.createdAt)?.date}
-                    </td>
-                    <td className="text-center py-1">{entry?.status}</td>
-                    <td className="text-center py-1">
-                      {entry?.out_time ? entry?.out_time : "-"}
-                    </td>
-                    <td className="text-center py-1">
-                      {entry?.in_time ? entry?.in_time : "-"}
-                    </td>
-                    {/* <td className="text-center py-1">
-                      <a
-                        href="#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </a>
-                    </td> */}
-                  </tr>
-                ))}
+                {studentData?.map((entry, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className="odd:bg-white odd:dark:bg-gray-900 text-white even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                    >
+                      <td className="text-center py-1">{index + 1}</td>
+                      <td className="text-center py-1">{entry?.reason}</td>
+                      <td className="text-center py-1">
+                        {formatDateTimeToIST(entry?.createdAt)?.time +
+                          ", " +
+                          formatDateTimeToIST(entry?.createdAt)?.date}
+                      </td>
+                      <td className="text-center py-1">
+                        {entry?.createdAt ? (
+                          <p>{formatDateTimeToIST(entry?.createdAt)?.date}</p>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
+                      <td className="text-center py-1 capitalize">
+                        {entry?.status}
+                      </td>
+
+                      <td className="text-center py-1 w-[100px]">
+                        <div className="flex justify-between space-x-3 px-6">
+                          {entry?.status === "approved" ? (
+                            <button
+                              onClick={() =>
+                                handleUpdateStatus(entry?.id, "moved-out")
+                              }
+                              className={`bg-green-600 w-[80px] hover:bg-green-700 `}
+                            >
+                              Approve
+                            </button>
+                          ) : entry?.status === "moved-out" ||
+                            entry?.status === "moved-in" ? (
+                            <p>
+                              {formatDateTimeToIST(entry?.outTime)?.time}
+                              <br />
+                              {formatDateTimeToIST(entry?.outTime)?.date}
+                            </p>
+                          ) : (
+                            <p className="text-center w-full">-</p>
+                          )}
+                        </div>
+                      </td>
+                      <td className="text-center py-1 w-[100px]">
+                        <div className="flex justify-between space-x-3 px-6">
+                          {entry?.status === "moved-out" ? (
+                            <button
+                              onClick={() =>
+                                handleUpdateStatus(entry?.id, "moved-in")
+                              }
+                              className={`bg-green-600 w-[80px] hover:bg-green-700 `}
+                            >
+                              Approve
+                            </button>
+                          ) : entry?.status === "moved-in" ? (
+                            <p>
+                              {formatDateTimeToIST(entry?.inTime)?.time}
+                              <br />
+                              {formatDateTimeToIST(entry?.inTime)?.date}
+                            </p>
+                          ) : (
+                            <p className="text-center w-full">-</p>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>{" "}

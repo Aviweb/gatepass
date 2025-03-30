@@ -62,7 +62,7 @@ const LoginForm = ({ role, setMessage }: props) => {
         console.log("uuid in login", data);
 
         document.cookie = `token=${data.token}; path=/; Secure`;
-        document.cookie = `uuid=${data.uuid}; path=/; Secure`;
+        document.cookie = `hostel=${data.hostel}; path=/; Secure`;
         router.push("/hostelClerk");
       }
     } catch (err) {
@@ -134,6 +134,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="text"
             name="name"
+            className="text-black"
             placeholder="Enter Name"
             id="hname"
             value={name}
@@ -143,6 +144,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="password"
             name="password"
+            className="text-black"
             placeholder="Password"
             id="hpassword"
             value={pass}
@@ -161,6 +163,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="text"
             name="name"
+            className="text-black"
             placeholder="Enter Name"
             id="aname"
             value={name}
@@ -170,6 +173,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="password"
             name="password"
+            className="text-black"
             placeholder="Password"
             id="apassword"
             value={pass}
@@ -188,6 +192,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="text"
             name="name"
+            className="text-black"
             placeholder="Enter Name"
             id="gname"
             value={name}
@@ -197,6 +202,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="password"
             name="password"
+            className="text-black"
             placeholder="Password"
             id="gpassword"
             value={pass}
@@ -215,6 +221,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="text"
             name="roll"
+            className="text-black"
             placeholder="Roll No."
             id="lroll"
             value={roll}
@@ -224,6 +231,7 @@ const LoginForm = ({ role, setMessage }: props) => {
           <input
             type="password"
             name="password"
+            className="text-black"
             placeholder="Password"
             id="lpassword"
             value={pass}

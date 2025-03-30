@@ -8,9 +8,58 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     // Validate the data
-    const { name, roll, branch, hostel, phoneNo, date, reason, user_uuid } =
-      data;
+    const {
+      uuid,
+      status,
+      name,
+      roll,
+      branch,
+      hostel,
+      phoneNo,
+      date,
+      reason,
+      user_uuid,
+    } = data;
+
+    if (uuid && status) {
+      console.log("inside", uuid, status);
+      let updatedGatePass;
+      if (status === "moved-out") {
+        updatedGatePass = await prisma.gatePass.update({
+          where: { id: uuid },
+          data: {
+            status,
+            outTime: new Date(),
+          },
+        });
+      } else if (status === "moved-in") {
+        updatedGatePass = await prisma.gatePass.update({
+          where: { id: uuid },
+          data: {
+            status,
+            inTime: new Date(),
+          },
+        });
+      } else {
+        updatedGatePass = await prisma.gatePass.update({
+          where: { id: uuid },
+          data: {
+            status,
+          },
+        });
+      }
+
+      return new Response(
+        JSON.stringify({
+          message: "Status updated successfully!",
+          data: updatedGatePass,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
     if (!name || !roll || !branch || !hostel || !phoneNo || !date || !reason) {
+      console.log("outside");
+
       return new Response(
         JSON.stringify({ message: "All fields are required." }),
         { status: 400, headers: { "Content-Type": "application/json" } }
@@ -28,7 +77,7 @@ export async function POST(request: Request) {
         branch,
         hostel,
         phoneNo,
-        date: new Date(date), // Convert string to Date object
+        date: new Date(date), // Use the validated date
         reason,
         status: "pending",
         inTime: null,
@@ -58,6 +107,7 @@ export async function GET(request: Request) {
     // Parse the URL for query parameters
     const { searchParams } = new URL(request.url);
     const uuid = searchParams.get("uuid");
+    const hostel = searchParams.get("hostel");
     // const
 
     let gatePasses;
@@ -76,6 +126,34 @@ export async function GET(request: Request) {
         return new Response(
           JSON.stringify({
             message: "No records found for the provided Roll No.",
+          }),
+          { status: 404, headers: { "Content-Type": "application/json" } }
+        );
+      }
+      console.log("hello", gatePasses);
+
+      return new Response(
+        JSON.stringify({
+          message: "Data fetched successfully!",
+          data: gatePasses,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    } else if (hostel) {
+      console.log("inside", hostel);
+
+      // Fetch records matching the UUID
+      gatePasses = await prisma.gatePass.findMany({
+        where: {
+          hostel: hostel, // Replace with the specific hostel name you want
+        },
+      });
+
+      if (gatePasses.length === 0) {
+        return new Response(
+          JSON.stringify({
+            message: "No records found for the provided Hostel",
+            hostel,
           }),
           { status: 404, headers: { "Content-Type": "application/json" } }
         );

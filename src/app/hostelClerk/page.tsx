@@ -5,9 +5,10 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 interface HostelDataProps {
+  id: string;
   createdAt: Date;
   reason?: string;
-  status?: string;
+  status: string;
   out_time?: string;
   in_time?: string;
 }
@@ -22,7 +23,7 @@ const Page = () => {
     "Status",
     "Out Time",
     "In Time",
-    // "Actions",
+    "Actions",
   ];
 
   function formatDateTimeToIST(dateTimeStr: Date) {
@@ -49,15 +50,33 @@ const Page = () => {
     };
     // return `${hours}:${minutes} ${ampm}, ${day} ${month} ${year}`;
   }
+
+  const handleUpdateStatus = async (uuid: string, status: string) => {
+    console.log("data", uuid);
+
+    const formData = {
+      uuid: uuid,
+      status: status,
+    };
+    try {
+      const response = await fetch("api/submitGatePass", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      await response.json();
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   useEffect(() => {
     const cookies = new Cookies();
     const token = cookies.get("token");
     console.log("Token:", token);
-
-    const uuid = "4517f629-c687-4731-9e3c-f273c15098ad";
+    const hostel = cookies.get("hostel");
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/submitGatePass?roll_no=${uuid}`);
+        const response = await fetch(`/api/submitGatePass?hostel=${hostel}`);
         const responseData = await response.json();
         if (response) {
           console.log("re", responseData?.data);
@@ -73,7 +92,7 @@ const Page = () => {
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <div>
-        <HeaderShort role="student" />
+        <HeaderShort role="hostelClerk" />
         <div className="w-[1340px] mx-auto mt-10">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -109,14 +128,36 @@ const Page = () => {
                     <td className="text-center py-1">
                       {entry?.in_time ? entry?.in_time : "-"}
                     </td>
-                    {/* <td className="text-center py-1">
-                      <a
-                        href="#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </a>
-                    </td> */}
+                    <td className="text-center py-1 w-[100px]">
+                      <div className="flex justify-between space-x-3 px-6">
+                        <button
+                          onClick={() =>
+                            handleUpdateStatus(entry?.id, "approved")
+                          }
+                          disabled={entry?.status !== "pending"}
+                          className={`bg-green-600 w-[80px] ${
+                            entry?.status !== "pending"
+                              ? "bg-green-600 opacity-60 hover:bg-green-600 hover:cursor-not-allowed"
+                              : "hover:bg-green-700"
+                          } `}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleUpdateStatus(entry?.id, "rejected")
+                          }
+                          disabled={entry?.status !== "pending"}
+                          className={`bg-red-600 w-[80px] ${
+                            entry?.status !== "pending"
+                              ? "bg-red-600 opacity-60 hover:bg-red-600 hover:cursor-not-allowed"
+                              : "hover:bg-red-700"
+                          } `}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
