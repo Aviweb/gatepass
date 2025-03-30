@@ -26,6 +26,7 @@ export async function POST(req) {
       status: 404,
     });
   }
+  console.log("check here", password);
 
   const isPasswordValid = await compare(password, user.password);
 
@@ -46,7 +47,7 @@ export async function POST(req) {
   //   console.log("hello for token ", user.uuid);
 
   return new Response(
-    JSON.stringify({ success: true, token, uuid: user?.uuid }),
+    JSON.stringify({ success: true, token, hostel: user.hostel }),
     {
       status: 200,
     }

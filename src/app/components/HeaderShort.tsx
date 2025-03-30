@@ -46,10 +46,13 @@ export const HeaderShort = ({ role }: props) => {
     { title: "Gate", link: "/glogin" },
   ];
 
+  const hostelRoleData = [{ title: "Logout", link: "/" }];
+
   let headerLinksData;
 
   if (role === "student") headerLinksData = studentRoleData;
   else if (role === "admin") headerLinksData = adminRoleData;
+  else if (role === "hostelClerk") headerLinksData = hostelRoleData;
   else headerLinksData = mainPageData;
   return (
     <div

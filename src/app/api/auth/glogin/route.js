@@ -12,7 +12,7 @@ export async function POST(req) {
   }
 
   const storedPasswordHash =
-    "$2a$10$zZmNxUD0t.olOdsTcHL7eOvGbCY5HTaQIp8aROZsYF50DCUqQ2cUS";
+    "$2a$10$RPhlOvPd9g1gsH/vZkP0uuBxx8oNDcUEwp9w2Wf5532jEak8pPvte";
 
   const isPasswordValid = await compare(password, storedPasswordHash);
 

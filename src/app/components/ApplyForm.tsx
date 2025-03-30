@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "universal-cookie";
+import { useRouter } from "next/navigation";
 import "../../static/apply.css";
 
 export const ApplyForm = () => {
@@ -12,6 +13,7 @@ export const ApplyForm = () => {
   const [date, setDate] = useState("");
   const [reason, setReason] = useState("");
   const user_uuid = cookies.get("uuid");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     if (!name || !roll || !branch || !hostel || !phoneNo || !date || !reason)
@@ -39,7 +41,8 @@ export const ApplyForm = () => {
       alert(data.error);
       console.log("message", data.error);
     } else {
-      alert("Registration successful");
+      alert("Booking successful");
+      router.push("/student/home");
       console.log("res", data);
     }
 
