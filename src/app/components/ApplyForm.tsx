@@ -60,7 +60,7 @@ export const ApplyForm = () => {
   };
 
   return (
-    <div className="background w-full">
+    <div className="background w-full px-4">
       <div className="flex w-[700px] mt-10 h- mx-auto">
         <div className="screen h-[600px] w-full">
           <div className="screen-header">

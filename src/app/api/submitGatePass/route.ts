@@ -1,5 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
+// const QRCode = require("qrcode");
+import QRCode from "qrcode";
+import nodemailer from "nodemailer";
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
@@ -41,15 +44,32 @@ export async function POST(request: Request) {
           },
         });
       } else {
+        const uniqueCode = uuidv4();
+        const baseURL = `${process.env.BASE_URL}/api/verifyGatePass`; // your backend endpoint
+        const qrData = `${baseURL}?code=${uuid}`;
+
+        const qrImage = await QRCode.toDataURL(qrData);
         updatedGatePass = await prisma.gatePass.update({
           where: { id: uuid },
           data: {
             status,
+            qrCode: qrImage,
+            uniqueCode: uniqueCode,
           },
+        });
+        sendMail({
+          to: "babbuezz@gmail.com",
+          subject: "Gate Pass Approved",
+          html: `
+            <p>The gate pass has been approved. Please find the QR code attached.</p>
+            <p>Status: ${status}</p>
+          `,
+          qrImageBase64: qrImage, // Pass the QR image base64 string
         });
       }
 
       // yaha se mail bhejenge
+
       return new Response(
         JSON.stringify({
           message: "Status updated successfully!",
@@ -197,3 +217,83 @@ export async function GET(request: Request) {
     await prisma.$disconnect();
   }
 }
+
+// const sendMail = async ({
+//   to,
+//   subject,
+//   text,
+// }: {
+//   to: string;
+//   subject: string;
+//   text: string;
+// }) => {
+//   const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//       user: process.env.SMTP_USER,
+//       pass: process.env.SMTP_PASS,
+//     },
+//   });
+
+//   // Email options
+//   const mailOptions = {
+//     from: process.env.SMTP_USER,
+//     to: to,
+//     subject: subject,
+//     text: text,
+//   };
+
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     console.log("Mail sent to", mailOptions?.to);
+//   } catch (error) {
+//     console.error("Error sending email:", error);
+//   }
+// };
+
+const sendMail = async ({
+  to,
+  subject,
+  text,
+  html,
+  qrImageBase64, // Include QR image if you want it as an attachment
+}: {
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+  qrImageBase64?: string; // Optional base64 image for the QR code
+}) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  // Define the email options
+  const mailOptions = {
+    from: process.env.SMTP_USER,
+    to: to,
+    subject: subject,
+    text: text,
+    html: html,
+    attachments: qrImageBase64
+      ? [
+          {
+            filename: "qrCode.png",
+            content: qrImageBase64.split(",")[1], // Extract base64 image data
+            encoding: "base64",
+          },
+        ]
+      : [], // Only add attachment if QR image is provided
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Mail sent to", mailOptions?.to);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};

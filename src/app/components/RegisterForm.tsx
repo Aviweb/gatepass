@@ -1,5 +1,8 @@
+"use client";
 import React, { SetStateAction } from "react";
 import { useState } from "react";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { useRouter } from "next/navigation";
 
 interface props {
   message: string;
@@ -19,9 +22,12 @@ interface ErrorsCustom {
 export const RegisterForm = ({ setMessage }: props) => {
   const [name, setName] = useState("");
   const [roll, setRoll] = useState("");
+  const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [cpass, setCpass] = useState("");
+  // const [cpass, setCpass] = useState("");
   const [formErrors, setFormErrors] = useState<ErrorsCustom>({});
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const formfieldData = [
     {
@@ -37,66 +43,79 @@ export const RegisterForm = ({ setMessage }: props) => {
       fieldName: "roll",
     },
     {
+      value: email,
+      setValue: setEmail,
+      placeholderText: "Enter your Email",
+      fieldName: "email",
+    },
+    {
       value: pass,
       setValue: setPass,
       placeholderText: "Enter your Password",
       fieldName: "pass",
     },
-    {
-      value: cpass,
-      setValue: setCpass,
-      placeholderText: "Confirm Password",
-      fieldName: "cpass",
-    },
+    // {
+    //   value: cpass,
+    //   setValue: setCpass,
+    //   placeholderText: "Confirm Password",
+    //   fieldName: "cpass",
+    // },
   ];
 
   const handleSignup = async () => {
+    setLoading(true); // Start loading
     const newErrors: ErrorsCustom = {};
-    // Validate name
-    if (!name.trim()) {
-      newErrors.name = "Name is required.";
-    }
 
-    // Validate roll number
+    if (!name.trim()) newErrors.name = "Name is required.";
     if (!roll.trim()) {
       newErrors.roll = "Roll number is required.";
     } else if (!/^\d+$/.test(roll)) {
       newErrors.roll = "Roll number must be numeric.";
     }
-
-    // Validate password
+    if (!email.trim()) newErrors.email = "Email is required.";
+    else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email address is invalid.";
+    }
     if (!pass) {
       newErrors.pass = "Password is required.";
     } else if (pass.length < 6) {
       newErrors.pass = "Password must be at least 6 characters long.";
     }
-
-    // Validate confirm password
-    if (!cpass) {
-      newErrors.cpass = "Confirm password is required.";
-    } else if (pass !== cpass) {
-      newErrors.cpass = "Passwords do not match.";
-    }
+    // if (!cpass) {
+    //   newErrors.cpass = "Confirm password is required.";
+    // } else if (pass !== cpass) {
+    //   newErrors.cpass = "Passwords do not match.";
+    // }
 
     setFormErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setLoading(false); // Stop loading if there are errors
+      return;
+    }
 
-    if (Object.keys(newErrors).length > 0) return;
-    const formdata = { name: name, roll_no: roll, password: pass };
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formdata),
-    });
+    try {
+      const formdata = { name, roll_no: roll, email, password: pass };
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formdata),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (data.error) {
-      setMessage(data.error);
-      console.log("message", data.error);
-    } else {
-      alert("Registration successful");
+      if (data.error) {
+        setMessage(data.error);
+      } else {
+        router.push("/");
+      }
+    } catch (err) {
+      console.error("Error during registration", err);
+      setMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Always stop loading
     }
   };
+
   return (
     <div className="login">
       <label className="mb-3" htmlFor="chk" aria-hidden="true">
@@ -124,7 +143,13 @@ export const RegisterForm = ({ setMessage }: props) => {
           </div>
         ))}
       </div>
-      <button onClick={handleSignup}>Sign up</button>
+      <button
+        className="flex justify-center items-center"
+        onClick={handleSignup}
+        disabled={loading}
+      >
+        {loading ? <LoadingSpinner /> : "Signup"}
+      </button>
     </div>
   );
 };
