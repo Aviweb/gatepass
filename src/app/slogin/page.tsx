@@ -7,17 +7,17 @@ import { Footer } from "../components/Footer";
 import LoginForm from "../components/LoginForm";
 import { RegisterForm } from "../components/RegisterForm";
 import { Message } from "../components/Message";
-import HeaderShort from "../components/HeaderShort";
+import HeaderNew from "../components/HeaderNew";
 
 const LoginPage: React.FC = () => {
   const [message, setMessage] = useState("");
 
   return (
     <div>
-      <HeaderShort />
+      <HeaderNew />
       <Message message={message} />
 
-      <div className="maindiv " style={{ height: "36.4rem" }}>
+      <div className="maindiv px-3 " style={{ height: "36.4rem" }}>
         <div className="main">
           <input type="checkbox" id="chk" aria-hidden="true" />
           <LoginForm setMessage={setMessage} />

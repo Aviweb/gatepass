@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 export async function POST(req) {
   console.log("post function");
 
-  const { name, roll_no, password } = await req.json();
+  const { name, roll_no, password, email } = await req.json();
 
-  if (!name || !roll_no || !password) {
+  if (!name || !roll_no || !password || !email) {
     console.log("resinside");
     return new Response(JSON.stringify({ error: "Missing fields" }), {
       status: 400,
@@ -17,7 +17,7 @@ export async function POST(req) {
 
   try {
     const user = await prisma.users.create({
-      data: { uuid: uuidv4(), name, roll_no, password: hashedPassword },
+      data: { uuid: uuidv4(), name, roll_no, password: hashedPassword, email },
     });
     return new Response(JSON.stringify({ success: true, user }), {
       status: 201,

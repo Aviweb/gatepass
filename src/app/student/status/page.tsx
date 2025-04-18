@@ -1,9 +1,9 @@
 "use client";
-import HeaderShort from "@/app/components/HeaderShort";
 import { Footer } from "@/app/components/Footer";
 import React from "react";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
+import HeaderNew from "@/app/components/HeaderNew";
 interface StudentDataProps {
   createdAt: Date;
   reason?: string;
@@ -73,8 +73,8 @@ const Page = () => {
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <div>
-        <HeaderShort role="student" />
-        <div className="w-[1340px] mx-auto mt-10">
+        <HeaderNew role="student" />
+        <div className="xl:w-[1340px] xl:mx-auto mt-10">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

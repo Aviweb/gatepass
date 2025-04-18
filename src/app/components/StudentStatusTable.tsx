@@ -40,7 +40,7 @@ export const StudentStatusTable = () => {
     fetchData();
   }, []);
   return (
-    <div className="w-[1340px] mx-auto mt-14">
+    <div className="px-4  mx-0 xl:w-[1340px] xl:mx-auto mt-14">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

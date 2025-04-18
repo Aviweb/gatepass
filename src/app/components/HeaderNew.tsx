@@ -1,8 +1,4 @@
 "use client";
-import React from "react";
-import "../../static/main.css";
-import "../../static/new.css";
-import "../../static/alert.css";
 import Image from "next/image";
 
 interface NavItems {
@@ -14,7 +10,7 @@ interface props {
   role?: string;
 }
 
-export const HeaderShort = ({ role }: props) => {
+export default function HeaderNew({ role }: props) {
   const clearCookies = () => {
     // Get all cookies
     const cookies = document.cookie.split(";");
@@ -54,45 +50,47 @@ export const HeaderShort = ({ role }: props) => {
   else if (role === "admin") headerLinksData = adminRoleData;
   else if (role === "hostelClerk") headerLinksData = hostelRoleData;
   else headerLinksData = mainPageData;
+
   return (
-    <div
+    <header
       className="bg-cover bg-right bg-fixed bg-no-repeat text-white"
       style={{
         backgroundImage: `url('/marc-olivier-jodoin-MJv31qXqSOU-unsplash.jpg')`,
       }}
-      id="header-home"
     >
-      <div className="px-customPadding py-6 h-[100px] bg-transparent  border-b-4 border-darkOrange">
-        <nav id="main-nav">
-          <div className="container1">
-            <a href="https://www.nitj.ac.in/" target="_blank">
-              <Image
-                src="/nitjlogo.png"
-                alt="NITJ"
-                className=" hidden sm:flex sm:max-w-[60px]"
-                width={60}
-                height={60}
-              />
-            </a>
-          </div>
-          <ul>
-            {headerLinksData.map((item: NavItems, index) => (
-              <li key={index}>
-                <a
-                  href={item?.link}
-                  onClick={() => {
-                    if (item?.title === "Logout") clearCookies();
-                  }}
-                >
-                  {item?.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    </div>
-  );
-};
+      <nav
+        aria-label="Global"
+        className="mx-auto sm:flex max-w-7xl items-center justify-between p-6 sm:px-8"
+      >
+        <a
+          className="flex justify-center"
+          href="https://www.nitj.ac.in/"
+          target="_blank"
+        >
+          <Image
+            src="/nitjlogo.png"
+            alt="NITJ"
+            className="max-w-[60px]"
+            width={60}
+            height={60}
+          />
+        </a>
 
-export default HeaderShort;
+        <div className="flex justify-center gap-x-3 sm:gap-x-12 border-b-4 border-darkOrange sm:border-transparent">
+          {headerLinksData.map((item: NavItems, index) => (
+            <a
+              key={index}
+              onClick={() => {
+                if (item?.title === "Logout") clearCookies();
+              }}
+              href={item.link}
+              className="py-0.5 bg-transparent text-white   border-b-4 border-transparent hover:border-darkOrange"
+            >
+              {item.title}
+            </a>
+          ))}
+        </div>
+      </nav>
+    </header>
+  );
+}

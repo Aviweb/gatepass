@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import { ApplyForm } from "../../components/ApplyForm";
-import HeaderShort from "@/app/components/HeaderShort";
 import { Footer } from "@/app/components/Footer";
+import HeaderNew from "@/app/components/HeaderNew";
 
 const Page = () => {
   return (
     <>
-      <HeaderShort role="student" />
+      <HeaderNew role="student" />
       <ApplyForm />
       <Footer />
     </>

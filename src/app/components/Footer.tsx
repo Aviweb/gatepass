@@ -6,7 +6,6 @@ import {
   faFacebook,
   faInstagram,
   faLinkedin,
-  faGithub,
   IconDefinition,
 } from "@fortawesome/free-brands-svg-icons";
 import "../../static/main.css";
@@ -32,16 +31,18 @@ export const Footer = () => {
       title: faLinkedin,
       link: "https://www.linkedin.com/school/dr-b-r-ambedkar-national-institute-of-technology-jalandhar-official/",
     },
-    {
-      title: faGithub,
-      link: "https://github.com/GDSC-NITJ/",
-    },
+    // {
+    //   title: faGithub,
+    //   link: "https://github.com/GDSC-NITJ/",
+    // },
   ];
 
   return (
-    <div className=" flex items-center justify-between px-customPadding mt-[38px] bg-[#262626]">
-      <p>Copyright &copy; 2023, All Rights Reserved</p>
-      <div className="space-x-4 py-1">
+    <div className="flex flex-col lg:flex-row items-center justify-between px-customPadding mt-[38px] bg-[#262626]">
+      <p className="text-xs lg:text-base text-center mt-3 lg:mt-0">
+        Copyright &copy; 2023, All Rights Reserved
+      </p>
+      <div className="space-x-2 lg:space-x-4 py-1">
         {footerData?.map((item: SocialMediaIconsData, index) => (
           <a
             key={index}
@@ -51,7 +52,7 @@ export const Footer = () => {
             rel="noopener noreferrer"
           >
             <FontAwesomeIcon
-              className="h-6 w-6 p-1.5 hover:bg-black hover:text-gray-200 bg-[#262626] border-2 text-white rounded-full"
+              className="h-4 w-4 p-1 lg:h-6 lg:w-6 lg:p-1.5 hover:bg-black hover:text-gray-200 bg-[#262626] border lg:border-2 text-white rounded-full"
               icon={item?.title}
             />
           </a>

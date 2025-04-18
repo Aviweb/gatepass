@@ -2,6 +2,7 @@
 import React, { SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LoadingSpinner } from "./LoadingSpinner";
 interface props {
   role?: string;
   setMessage: React.Dispatch<SetStateAction<string>>;
@@ -11,8 +12,10 @@ const LoginForm = ({ role, setMessage }: props) => {
   const [roll, setRoll] = useState("");
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const formData = {
         roll_no: roll,
@@ -28,9 +31,7 @@ const LoginForm = ({ role, setMessage }: props) => {
       const data = await response.json();
 
       if (data.error) {
-        // alert(data.error);
         setMessage(data?.error);
-        console.log("da", data);
       } else {
         document.cookie = `token=${data.token}; path=/; Secure`;
         document.cookie = `uuid=${data.uuid}; path=/; Secure`;
@@ -38,6 +39,8 @@ const LoginForm = ({ role, setMessage }: props) => {
       }
     } catch (err) {
       console.log("error", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -238,8 +241,12 @@ const LoginForm = ({ role, setMessage }: props) => {
             onChange={(e) => setPass(e.target.value)}
             required
           />
-          <button onClick={handleSubmit} value="Login">
-            Login
+          <button
+            className="flex justify-center items-center"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? <LoadingSpinner /> : "Login"}
           </button>
         </div>
       )}

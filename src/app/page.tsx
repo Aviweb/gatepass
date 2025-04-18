@@ -12,11 +12,8 @@ export default function Home() {
       <Head>
         <title>Gate Pass Management System</title>
       </Head>
-
       <Header />
-
       <RulesContainer />
-
       <Footer />
     </>
   );
