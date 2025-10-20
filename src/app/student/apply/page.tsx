@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ApplyForm } from "../../components/ApplyForm";
+import ApplyForm from "@/app/components/ApplyForm";
 import { Footer } from "@/app/components/Footer";
 import HeaderNew from "@/app/components/HeaderNew";
 
